@@ -8,8 +8,9 @@ import {
   hideLoadMoreButton,
   smoothScroll,
 } from './js/render-functions.js';
-import iziToast from 'izitoast';
 
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 const form = document.querySelector('.form');
 const loadMoreBtn = document.querySelector('.load-more');
 
@@ -49,8 +50,10 @@ form.addEventListener('submit', async (e) => {
 });
 
 loadMoreBtn.addEventListener('click', async () => {
-  currentPage += 1;
+ 
+  hideLoadMoreButton();
   showLoader();
+  currentPage += 1;
 
   try {
     const data = await getImagesByQuery(currentQuery, currentPage);
@@ -59,10 +62,11 @@ loadMoreBtn.addEventListener('click', async () => {
 
     const loadedImages = currentPage * 15;
     if (loadedImages >= totalHits) {
-      hideLoadMoreButton();
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
       });
+    } else {
+      showLoadMoreButton();
     }
   } catch (err) {
     iziToast.error({ message: 'Не вдалося отримати наступні зображення.' });
